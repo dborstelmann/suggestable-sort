@@ -26,31 +26,41 @@
 
     var suggestableTemplate = _.template(
         '<div class="ss">' +
-            '<input class="ss-input" type="text" placeholder="{{placeholder}}">' +
-            '{{# if (freeInput) { }}<button class="ss-add-free>+</button>{{# } }}' +
-            '<div class="ss-selected-list"></div>' +
+            '<input id="ss-input" type="text" placeholder="{{placeholder}}">' +
+            '{{# if (freeInput) { }}<button id="ss-add-free">+</button>{{# } }}' +
+            '<div id="ss-selected-list"></div>' +
         '</div>'
         )
 
-    var functions = {
-        initSuggestable: function (main) {
-            return suggestableTemplate(main);
-        },
-        freeInputSetup: function () {
-
-        },
-        initSortable: function () {
-
-        },
-        allowFreeInput: function () {
-
-        },
-        initBloodhound: function () {
-
-        },
-    }
-
     window.suggestableSort = function (options) {
+        var addSuggestion = function () {
+            var list = document.getElementById('ss-selected-list'),
+                input = document.getElementById('ss-input');
+
+            if (input.value.length > 0) {
+                list.insertAdjacentHTML('beforeend', main.template({value: input.value, label: input.value}));
+                Sortable.create(list);
+            }
+        }
+
+        var functions = {
+            initSuggestable: function (main) {
+                return suggestableTemplate(main);
+            },
+            freeInputSetup: function () {
+                document.getElementById('ss-add-free').onclick = addSuggestion;
+            },
+            initSortable: function () {
+
+            },
+            allowFreeInput: function () {
+
+            },
+            initBloodhound: function () {
+
+            },
+        }
+
         var main = {
             data: [],
             sortable: true,
@@ -84,6 +94,8 @@
 
         var el = functions.initSuggestable(main);
 
+        main.target.innerHTML = el;
+
         if (main.freeInput) {
             functions.freeInputSetup();
         }
@@ -91,7 +103,5 @@
         if (main.sortable) {
             functions.initSortable();
         }
-
-        main.target.innerHTML = el;
     }
 })();
